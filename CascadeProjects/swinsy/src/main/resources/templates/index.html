@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Swinsy Gigs</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Swinsy</h1>
+    <nav>
+        <a th:href="@{/}">Gigs</a>
+        <a th:href="@{/job-placement.html}">Job placement</a>
+        <a th:href="@{/rambi.html}">Rambi</a>
+        <a th:href="@{/admin}">AP</a>
+    </nav>
+</header>
+<div class="container">
+    <h2>Gig Collection</h2>
+    <div class="gig-grid" th:unless="${#lists.isEmpty(gigCollections)}">
+        <div class="card" th:each="g : ${gigCollections}">
+            <span class="folder" th:text="${g.folder}">Gig Collection</span>
+            <h3 th:text="${g.title}">Title</h3>
+            <p th:text="${g.description}">Description</p>
+            <p><span class="price" th:text="'$' + ${g.price}">$0.00</span></p>
+            <p th:if="${g.deadline != null}"><strong>Deadline:</strong> <span th:text="${g.deadline}"></span></p>
+            <p th:if="${g.locked}"><span class="locked">LOCKED</span></p>
+            <p th:if="${g.paused}"><span class="locked">PAUSED</span></p>
+            <a th:if="${!g.locked && !g.paused}" th:href="@{/gigs/{id}(id=${g.id})}" class="btn">Get this gig</a>
+        </div>
+    </div>
+
+    <h2>Work Submission</h2>
+    <div class="gig-grid" th:unless="${#lists.isEmpty(workSubmissions)}">
+        <div class="card" th:each="g : ${workSubmissions}">
+            <span class="folder" th:text="${g.folder}">Work Submission</span>
+            <h3 th:text="${g.title}">Title</h3>
+            <p th:text="${g.description}">Description</p>
+            <p><span class="price" th:text="'$' + ${g.price}">$0.00</span></p>
+            <p th:if="${g.deadline != null}"><strong>Deadline:</strong> <span th:text="${g.deadline}"></span></p>
+            <p th:if="${g.locked}"><span class="locked">LOCKED</span></p>
+            <p th:if="${g.paused}"><span class="locked">PAUSED</span></p>
+            <a th:if="${!g.locked && !g.paused}" th:href="@{/gigs/{id}(id=${g.id})}" class="btn">Get this gig</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>

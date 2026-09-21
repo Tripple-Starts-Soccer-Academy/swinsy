@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>baltimoredelima@gmail.com drive</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1>Drive</h1>
+    <nav>
+        <a th:href="@{/}">Gigs</a>
+        <a th:href="@{/admin}">AP</a>
+    </nav>
+</header>
+<div class="container">
+    <h2>baltimoredelima@gmail.com drive</h2>
+    <p th:if="${param.submitted != null}" style="color:green; font-weight:bold;">Sent to baltimoredelima@gmail.com drive.</p>
+    <p th:if="${#lists.isEmpty(files)}">No files yet.</p>
+    <table th:unless="${#lists.isEmpty(files)}">
+        <tr th:each="f : ${files}">
+            <td th:text="${f}"></td>
+            <td><a th:href="@{/files/{name}(name=${f})}">Download</a></td>
+        </tr>
+    </table>
+    <a th:href="@{/}" class="btn">Back to gigs</a>
+</div>
+</body>
+</html>

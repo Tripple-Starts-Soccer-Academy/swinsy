@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${gig.title}">Gig</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<header>
+    <h1 th:text="${gig.title}">Gig</h1>
+    <nav>
+        <a th:href="@{/}">Back to gigs</a>
+        <a th:href="@{/job-placement.html}">Job placement</a>
+        <a th:href="@{/rambi.html}">Rambi</a>
+    </nav>
+</header>
+<div class="container">
+    <div class="card">
+        <span class="folder" th:text="${gig.folder}">Folder</span>
+        <p th:text="${gig.description}">Description</p>
+        <p><span class="price" th:text="'$' + ${gig.price}">$0.00</span></p>
+        <p th:if="${gig.deadline != null}"><strong>Deadline:</strong> <span th:text="${gig.deadline}"></span></p>
+        <p th:if="${gig.documentFileName != null}">
+            <strong>Document:</strong>
+            <a th:href="@{/files/{name}(name=${gig.documentFileName})}" th:text="${gig.documentFileName}">Download</a>
+        </p>
+        <p th:if="${gig.locked}"><span class="locked">This gig is locked.</span></p>
+        <p th:if="${gig.paused}"><span class="locked">This gig is paused.</span></p>
+    </div>
+
+    <h2>Submit your work</h2>
+    <p th:if="${param.submitted != null}" style="color:green; font-weight:bold;">Sent to <a th:href="@{/drive}" style="color:#1e3a8a; text-decoration:underline;">baltimoredelima@gmail.com drive</a>.</p>
+    <p th:if="${param.payment != null}" style="color:green; font-weight:bold;">Payment information submitted.</p>
+    <form th:action="@{/gigs/{id}/submit(id=${gig.id})}" method="post" enctype="multipart/form-data" th:if="${!gig.locked && !gig.paused}">
+        <label style="color: var(--text);">Name
+            <input type="text" name="studentName" required>
+        </label>
+        <label style="color: var(--text);">Player id
+            <input type="text" name="playerId" required>
+        </label>
+        <label style="color: var(--text);">Short notice
+            <textarea name="content" rows="4" required></textarea>
+        </label>
+        <label style="color: var(--text);">Document
+            <input type="file" name="document" id="documentInput" style="display:none;">
+            <button type="button" class="btn" style="margin-top:.35rem;" onclick="document.getElementById('documentInput').click()">Choose a file</button>
+        </label>
+        <button type="submit" class="btn">Get this gig</button>
+        <button type="button" class="btn" id="paidBtn" style="margin-left:.5rem;">Paid</button>
+    </form>
+
+    <div id="paymentOptions" style="display:none; margin-top:1rem;" th:if="${!gig.locked && !gig.paused}">
+        <div class="card" style="background: linear-gradient(rgba(255,255,255,.7), rgba(255,255,255,.7)), url('/backgrounds/under_18line.jpg'); background-size: contain; background-position: center; background-repeat: no-repeat;">
+            <h3>Enter payment information</h3>
+            <form th:action="@{/gigs/{id}/payment(id=${gig.id})}" method="post" onsubmit="return buildPaymentDetails();">
+                <input type="hidden" name="details" id="paymentDetails">
+                <label>Your name
+                    <input type="text" name="playerName" id="paymentPlayerName" required>
+                </label>
+                <h4>Method</h4>
+                <select name="method" id="paymentMethod" onchange="showPaymentFields()">
+                    <option value="Remitly" selected>Remitly</option>
+                    <option value="Mobile Money">Mobile Money</option>
+                    <option value="Apple Pay">Apple Pay</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+
+                <div id="remitlyFields" class="payment-fields">
+                    <label>Team ID <input type="text" id="remitlyCountry" required></label>
+                    <label>Phone number <input type="text" id="remitlyPhone" required></label>
+                    <label>Email <input type="email" id="remitlyEmail"></label>
+                </div>
+
+                <div id="mobileFields" class="payment-fields" style="display:none;">
+                    <label>Phone number <input type="text" id="mobilePhone" required></label>
+                    <label>Mobile money provider <input type="text" id="mobileProvider" required></label>
+                    <label>Team ID <input type="text" id="mobileCountry"></label>
+                </div>
+
+                <div id="appleFields" class="payment-fields" style="display:none;">
+                    <label>Apple Pay ID (phone or email) <input type="text" id="appleId" required></label>
+                </div>
+
+                <div id="bankFields" class="payment-fields" style="display:none;">
+                    <label>Account holder name <input type="text" id="bankHolder" required></label>
+                    <label>Bank name <input type="text" id="bankName" required></label>
+                    <label>Account number <input type="text" id="bankAccount" required></label>
+                    <label>Routing / SWIFT / IBAN <input type="text" id="bankRouting" required></label>
+                    <label>Team ID <input type="text" id="bankCountry" required></label>
+                </div>
+
+                <button type="submit" class="btn" style="margin-top:.5rem;">Confirm payment</button>
+            </form>
+        </div>
+    </div>
+    <p th:if="${gig.locked}"><span class="locked">Submission is disabled for locked gigs.</span></p>
+    <p th:if="${gig.paused}"><span class="locked">Submission is disabled for paused gigs.</span></p>
+</div>
+<script>
+    const paidBtn = document.getElementById('paidBtn');
+    const paymentOptions = document.getElementById('paymentOptions');
+    if(paidBtn){
+        paidBtn.addEventListener('click', () => {
+            paymentOptions.style.display = paymentOptions.style.display === 'none' ? 'block' : 'none';
+            showPaymentFields();
+        });
+    }
+
+    function showPaymentFields(){
+        const method = document.getElementById('paymentMethod').value;
+        document.getElementById('remitlyFields').style.display = method === 'Remitly' ? 'block' : 'none';
+        document.getElementById('mobileFields').style.display = method === 'Mobile Money' ? 'block' : 'none';
+        document.getElementById('appleFields').style.display = method === 'Apple Pay' ? 'block' : 'none';
+        document.getElementById('bankFields').style.display = method === 'Bank Transfer' ? 'block' : 'none';
+    }
+
+    function buildPaymentDetails(){
+        const method = document.getElementById('paymentMethod').value;
+        const name = document.getElementById('paymentPlayerName').value.trim();
+        if(!name) return false;
+        let details = '';
+        if(method === 'Remitly'){
+            const country = document.getElementById('remitlyCountry').value.trim();
+            const phone = document.getElementById('remitlyPhone').value.trim();
+            const email = document.getElementById('remitlyEmail').value.trim();
+            if(!country || !phone) return false;
+            details = 'Remitly\nTeam ID: ' + country + '\nPhone: ' + phone + (email ? '\nEmail: ' + email : '');
+        } else if(method === 'Mobile Money'){
+            const phone = document.getElementById('mobilePhone').value.trim();
+            const provider = document.getElementById('mobileProvider').value.trim();
+            const team = document.getElementById('mobileCountry').value.trim();
+            if(!phone || !provider) return false;
+            details = 'Mobile Money\nPhone: ' + phone + '\nProvider: ' + provider + (team ? '\nTeam ID: ' + team : '');
+        } else if(method === 'Apple Pay'){
+            const id = document.getElementById('appleId').value.trim();
+            if(!id) return false;
+            details = 'Apple Pay\nApple Pay ID: ' + id;
+        } else if(method === 'Bank Transfer'){
+            const holder = document.getElementById('bankHolder').value.trim();
+            const bank = document.getElementById('bankName').value.trim();
+            const account = document.getElementById('bankAccount').value.trim();
+            const routing = document.getElementById('bankRouting').value.trim();
+            const country = document.getElementById('bankCountry').value.trim();
+            if(!holder || !bank || !account || !routing || !country) return false;
+            details = 'Bank Transfer\nAccount holder: ' + holder + '\nBank: ' + bank + '\nAccount number: ' + account + '\nRouting/SWIFT/IBAN: ' + routing + '\nTeam ID: ' + country;
+        }
+        document.getElementById('paymentDetails').value = details;
+        return true;
+    }
+</script>
+</body>
+</html>

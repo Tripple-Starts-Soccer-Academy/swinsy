@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Rambi</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .job-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-top: 1rem; }
+        .job-card { color: #fff; padding: 1.5rem; border-radius: .75rem; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,.15); transition: transform .2s; text-align: center; }
+        .job-card:hover { transform: scale(1.03); }
+        .job-card h3 { margin: 0; font-size: 1.1rem; }
+        #jobDetail { background: #fff; border-left: 5px solid #1e3a8a; display: none; margin-top: 1.5rem; }
+    </style>
+</head>
+<body>
+<header>
+    <h1>Swinsy</h1>
+    <nav>
+        <a href="/">Gigs</a>
+        <a href="/job-placement.html">Job placement</a>
+        <a href="/rambi.html">Rambi</a>
+        <a href="/admin">AP</a>
+    </nav>
+</header>
+<div class="container">
+    <h2>Rambi</h2>
+    <div class="card">
+        <p>This is the Rambi component. Add your Rambi-specific content here.</p>
+    </div>
+    <h2>Job Posts</h2>
+    <div class="job-grid" id="jobGrid">
+        <div class="job-card" style="background: linear-gradient(135deg,#1e3a8a,#3b82f6);" onclick="showJob('Architectural Engineer','Design and review architectural plans for construction projects.','$45/hr')">
+            <h3>Architectural Engineer</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#0f766e,#14b8a6);" onclick="showJob('Remote File Organizer','Organize and label digital files remotely.','$20/hr')">
+            <h3>Remote File Organizer</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#be185d,#ec4899);" onclick="showJob('Nutritionist Temp to Hire','Provide temporary nutrition counseling and meal planning.','$35/hr')">
+            <h3>Nutritionist Temp to Hire</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#9a3412,#f97316);" onclick="showJob('TSSA Relations Manager','Manage transportation safety and compliance relations.','$50/hr')">
+            <h3>TSSA Relations Manager</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#4338ca,#8b5cf6);" onclick="showJob('UK Ambassador','Represent the organization in UK markets and partnerships.','$80/hr')">
+            <h3>UK Ambassador</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#047857,#f59e0b);" onclick="showJob('Tourism Punch Operations','Coordinate tourism logistics and punch-list operations for events and travel packages.','$55/hr')">
+            <h3>Tourism Punch Operations</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#1e40af,#60a5fa);" onclick="showJob('Sales Manager','Lead sales efforts, build client relationships, and drive revenue growth.','$60/hr')">
+            <h3>Sales Manager</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#be123c,#fb7185);" onclick="showJob('Care Giver','Provide personal care and support to clients in daily activities.','$25/hr')">
+            <h3>Care Giver</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#0f766e,#2dd4bf);" onclick="showJob('Math Teacher','Deliver mathematics lessons and support student learning.','$45/hr')">
+            <h3>Math Teacher</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#7c3aed,#a78bfa);" onclick="showJob('Engineer 1 Curryoctos','Entry-level engineering role for Curryoctos product development.','$55/hr')">
+            <h3>Engineer 1 Curryoctos</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#c2410c,#fb923c);" onclick="showJob('Product Designer','Create product mockups and design user-facing solutions.','$50/hr')">
+            <h3>Product Designer</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#1d4ed8,#38bdf8);" onclick="showJob('Production Director Video and Nano Maths','Direct video production and coordinate nano maths content.','$65/hr')">
+            <h3>Production Director Video and Nano Maths</h3>
+        </div>
+        <div class="job-card" style="background: linear-gradient(135deg,#b91c1c,#f87171);" onclick="showJob('Doctor','Provide medical consultations and patient care.','$90/hr')">
+            <h3>Doctor</h3>
+        </div>
+    </div>
+    <div id="jobDetail" class="card">
+        <h3 id="jobDetailTitle"></h3>
+        <p id="jobDetailDesc"></p>
+        <p><strong>Salary:</strong> <span id="jobDetailSalary"></span></p>
+    </div>
+</div>
+<script>
+    function showJob(title, desc, salary) {
+        document.getElementById('jobDetail').style.display = 'block';
+        document.getElementById('jobDetailTitle').textContent = title;
+        document.getElementById('jobDetailDesc').textContent = desc;
+        document.getElementById('jobDetailSalary').textContent = salary;
+    }
+</script>
+</body>
+</html>
